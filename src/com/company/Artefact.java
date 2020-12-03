@@ -25,6 +25,7 @@ public class Artefact {
         this.Current_owner=new Stakeholder(object.Current_owner);
     }
 
+//setters and getters for the class Artefact
     public void setId(String id) {
         Id = id;
     }

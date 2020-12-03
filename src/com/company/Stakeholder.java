@@ -25,7 +25,7 @@ public class Stakeholder {
         this.Id=object.getId();
 
     }
-
+// list of setters and getters for stackholder class
 
     public void setName(String name) {
         Name = name;

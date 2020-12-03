@@ -39,22 +39,27 @@ public class Blockchain {
     }
 
     //Returns an arraylist that does something??
+    //what this method does is to retrieve all the transactions in the blockchain for the artefact identified by its ID
     public ArrayList<Block> retrieveProvenance(String id){
         ArrayList<Block> searchResults= new ArrayList<Block>();
         for (int i=0; i<this.blockchain.size();i++){
+
+            //TODO id is a string so it should .equalsto and not ==
             if (id==blockchain.get(i).getData().getArtefact().getId()){
                 searchResults.add(blockchain.get(i));
             }
             else{continue;
             }
         }
+        //return an arraylist with all the transactions of one specific artefact
         return searchResults;
     }
 
-
+//same method as before but with the difference that now we want a specific time to check
     public ArrayList<Block> retrieveProvenance(String id, long timestamp){
         ArrayList<Block> searchResults= new ArrayList<Block>();
         for (int i=0; i<this.blockchain.size();i++){
+            // TODO check that timestamp works ex... year or month or other way to express time stamp
             if (id==blockchain.get(i).getData().getArtefact().getId()&& blockchain.get(i).getTimeStamp()<timestamp){
                 searchResults.add(blockchain.get(i));
             }
@@ -63,12 +68,13 @@ public class Blockchain {
         }
         return searchResults;
     }
-
+//check all the difference conditions for treatySC so it uses different methods, shown before that allow to check for different conditions
     public boolean twoTransactionsPerArtefact(Artefact a){
         ArrayList<Block> results=new ArrayList<Block>();
         for (int i=0; i< retrieveProvenance(a.getId()).size();i++){
             results.add(i,retrieveProvenance(a.getId()).get(i));
         }
+        //check is the count of artefact after 2001 is bigger than 2
         int count=0;
         for (int i=0; i< results.size();i++){
             //TODO: parse the timeStamp for year?
@@ -107,10 +113,10 @@ public class Blockchain {
             //separate this out into 3 if statements; if any of them break, return false;
             if (this.blockchain.get(this.blockchain.size()-1).getCurHash().equalsIgnoreCase(this.blockchain.get(this.blockchain.size()-1).calculateBlockHash())&&
                     //we now need to compare the final block's has to the final block-1's hash to verify that the current block stores the right hash
-                    bc.get(bc.size()-2).getCurHash().equalsIgnoreCase(bc.get(bc.size()-1).getPreviousHash())&&
+                    this.blockchain.get(this.blockchain.size()-2).getCurHash().equalsIgnoreCase(this.blockchain.get(this.blockchain.size()-1).getPreviousHash())&&
 
                     //verify that the current block has been mined (check da prefix)
-                    bc.get(bc.size()-1).getCurHash().substring(0,sizeOfPrefix).equals(Integer.toString(prefix)))//TODO: check it can be out of bound and ask what if the first 5 0s is the first option
+                    this.blockchain.get(this.blockchain.size()-1).getCurHash().substring(0,sizeOfPrefix).equals(Integer.toString(prefix)))//TODO: check it can be out of bound and ask what if the first 5 0s is the first option
             {
                 return true;
             }

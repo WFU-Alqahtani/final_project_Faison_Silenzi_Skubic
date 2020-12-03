@@ -155,7 +155,10 @@ public class Block {
 //        }
 //    }
 
+
+    //this method mines the block
     public void mineBlock(int prefix){
+        // if method treaty SC returns true then do mine method and set the current hash the value of the mine method.
         if(treatySC(this.data)==true){
             this.setCurHash(mine(prefix));
         }
@@ -163,13 +166,13 @@ public class Block {
             System.out.println("The transaction did not meet the stakeholders' agreement.");
         }
     }
-
+// it just allows to create random numbers
     public int RandomNumberGen(){
         SecureRandom rand = new SecureRandom();
         return rand.nextInt();
     }
 
-
+// mine method that find an hash starting with the prefix required
     public String mine(int prefix){
         int sizeOfPrefix = (""+prefix).length();
         String counterHash = "";
@@ -193,7 +196,7 @@ public class Block {
 
 
 
-
+//this method implement the agreement between the stakeholders
     public boolean treatySC(Transaction t){
         double priceVal = t.getPrice();//sold price of artefact
 
@@ -203,7 +206,7 @@ public class Block {
         double artefactSellerCurBal = t.getSeller().getBalance();
 
         Blockchain blockchainInstance= new Blockchain();
-        //checks for 2 transactions for the artefact *after 2001* and if the buyer can afford the artefact
+        //checks for 2 transactions for the artefact *after 2001* and if the buyer can afford the artefact by going to the method twotransactionsperartefact located in the blockchain class
         if(blockchainInstance.twoTransactionsPerArtefact(t.getArtefact())==true && t.getBuyer().getBalance()>=priceVal){
             t.getAuctionHouse().setBalance(auctionHouseCurBal + .1*(priceVal));//10% given to auctionhouse
             t.getArtefact().getCurrent_owner().setBalance(artefactCountryCurBal + .2*(priceVal));//20% given to country of origin
