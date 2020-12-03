@@ -24,12 +24,16 @@ public class Block {
         nonce=0;
 
     }
-    public Block(String previousHash, Transaction data, long timeStamp, int nonce){
+    // transaction, current hash, timestamp)
+
+
+    public Block(Transaction data, String previousHash, long timeStamp){
         this.previousHash=previousHash;
         this.curHash= calculateBlockHash();// initial hash no zeros
         this.data=new Transaction(data);
         this.timeStamp=timeStamp;
-        this.nonce=nonce;
+        this.nonce = RandomNumberGen();
+
     }
     public Block(Block blo){
         this.previousHash=blo.getPreviousHash();
@@ -79,6 +83,7 @@ public class Block {
         this.previousHash = previousHash;
     }
 
+    //calculate blockhash with No Nonce provided
     public String calculateBlockHash() {
         String dataToHash = previousHash
                 + Long.toString(timeStamp)
@@ -90,7 +95,7 @@ public class Block {
         try {
             digest = MessageDigest.getInstance("SHA-256");
             bytes = digest.digest(dataToHash.getBytes(UTF_8));
-            throw new UnsupportedEncodingException("ciao"); //give real error message later
+            throw new UnsupportedEncodingException("ciao"); //TODO: give real error message later
         } catch (NoSuchAlgorithmException | UnsupportedEncodingException ex) {
             System.out.println("The encoding is not supported");
         }
@@ -102,6 +107,7 @@ public class Block {
         return buffer.toString();
     }
 
+    //calculate blockhash but the nonce has been provided
     public String calculateBlockHash(int nonce) {
         String dataToHash = previousHash
                 + Long.toString(timeStamp)
@@ -124,9 +130,6 @@ public class Block {
         }
         return buffer.toString();
     }
-
-
-
 
 //    public String mineBlock(int prefix) {
 //        //  if (Treaties(t).fornow()){}
@@ -161,6 +164,12 @@ public class Block {
         }
     }
 
+    public int RandomNumberGen(){
+        SecureRandom rand = new SecureRandom();
+        return rand.nextInt();
+    }
+
+
     public String mine(int prefix){
         int sizeOfPrefix = (""+prefix).length();
         String counterHash = "";
@@ -181,6 +190,8 @@ public class Block {
         }
         return counterHash;
     }
+
+
 
 
     public boolean treatySC(Transaction t){
