@@ -11,32 +11,16 @@ import java.util.ArrayList;
 import java.time.LocalDateTime;
 import java.util.Date;
 
-//important for intregrity to keep Blockchain object as immutable via 'final' and make it abstract
+//important for integrity to keep Blockchain object as immutable via 'final' and make it abstract
 public class Blockchain {
 
-    private static ArrayList<Block> blockchain;
+    public static ArrayList<Block> blockchain = new ArrayList<Block>();
     public static ArrayList<Block> getChain(){
         return blockchain;
     }
-    public Blockchain() {
-        this.blockchain = new ArrayList<Block>();
-    }
 
-    //Copies one blockchain as another -- probably useless now since we don't have arraylists
-    public Blockchain(ArrayList<Block> blockchain) {
-        this.blockchain = new ArrayList<Block>();
-        for (int i = 0; i < blockchain.size(); i++) {
-            this.blockchain.add(blockchain.get(i));
-        }
-    }
 
-    //this is a constructor for a blockchain of Type Blockchain instead of ArrayList
-    public Blockchain (Blockchain a){
-        this.blockchain= new ArrayList<Block>();
-        for (int i =0; i<a.getChain().size(); i++) {
-            this.blockchain.add(a.getChain().get(i));
-        }
-    }
+    //remove all constructors
 
     //Returns an arraylist that does something??
     //what this method does is to retrieve all the transactions in the blockchain for the artefact identified by its ID
@@ -45,7 +29,7 @@ public class Blockchain {
         for (int i=0; i<this.blockchain.size();i++){
 
             //TODO id is a string so it should .equalsto and not ==
-            if (id==blockchain.get(i).getData().getArtefact().getId()){
+            if (id.equalsIgnoreCase(blockchain.get(i).getData().getArtefact().getId())){
                 searchResults.add(blockchain.get(i));
             }
             else{continue;
@@ -77,8 +61,12 @@ public class Blockchain {
         //check is the count of artefact after 2001 is bigger than 2
         int count=0;
         for (int i=0; i< results.size();i++){
-            //TODO: parse the timeStamp for year?
-            if (results.get(i).getTimeStamp()>2001){
+
+            //TODO: Verify that the year works?
+            //getData pulls the transaction data from the block.
+            int year = results.get(i).getData().getTimestamp().getYear();
+
+            if (year>2001){
                 count=count +1;
             }//TODO: check if it is year or other way to calculate time
         }
@@ -92,18 +80,20 @@ public class Blockchain {
     }
 
 
-
-    public boolean verifyBlockchain(int prefix){
+    // Figure out what the issue is with Static references; when we make this static, we can't reference anything with "this"
+    //verify every block in the blockchain
+    public static boolean verifyBlockchain(int prefix){
         int sizeOfPrefix = (""+prefix).length();
 
         //Blockchain method Size() needs to be made to return int that shows the size of the BC
         //getCurHash is preformed on a Block datatype and returns the current hash of a block
-        //
 
-        if (this.blockchain.size() == 0){
+        if (blockchain.size() == 0) {
             //just add the first block bc it's the genesis block
+            return true;
         }
-        else {
+
+            //TODO: Make a for loop starting at 1 and wrap the if statement in it.
 
             //TODO: Modify this so that it calls the blockchain class itself rather than an ArrayList (BC) that doesn't exist
 
@@ -111,20 +101,26 @@ public class Blockchain {
             //then comparing it (ignoring case) by using the mine method (which doesn't actually mine but calculates the hash).
 
             //separate this out into 3 if statements; if any of them break, return false;
-            if (this.blockchain.get(this.blockchain.size()-1).getCurHash().equalsIgnoreCase(this.blockchain.get(this.blockchain.size()-1).calculateBlockHash())&&
-                    //we now need to compare the final block's has to the final block-1's hash to verify that the current block stores the right hash
-                    this.blockchain.get(this.blockchain.size()-2).getCurHash().equalsIgnoreCase(this.blockchain.get(this.blockchain.size()-1).getPreviousHash())&&
+        System.out.println("CurHash: "+blockchain.get(blockchain.size()-1).getCurHash());
+        System.out.println("Calculate1: "+blockchain.get(blockchain.size()-1).calculateBlockHash());
+        System.out.println("Calculate2: "+blockchain.get(blockchain.size()-1).calculateBlockHash());
+        System.out.println(blockchain.get(blockchain.size()-1).getNonce());
 
-                    //verify that the current block has been mined (check da prefix)
-                    this.blockchain.get(this.blockchain.size()-1).getCurHash().substring(0,sizeOfPrefix).equals(Integer.toString(prefix)))//TODO: check it can be out of bound and ask what if the first 5 0s is the first option
-            {
-                return true;
-            }
-            else{
-                return false;
-            }
+        if (!blockchain.get(blockchain.size()-1).getCurHash().equalsIgnoreCase(blockchain.get(blockchain.size()-1).calculateBlockHash())) {
+            System.out.println("Stored current != calculated current hash");
+            return false;
+        }
+        if (!blockchain.get(blockchain.size()-2).getCurHash().equalsIgnoreCase(blockchain.get(blockchain.size()-1).getPreviousHash())) {
+            System.out.println("previous hash != calculated previous hash");
+            return false;
 
         }
+        if (!blockchain.get(blockchain.size()-1).getCurHash().substring(0,sizeOfPrefix).equals(Integer.toString(prefix))){
+            System.out.println("Block has not been mined yet. Third ifStmt");
+            return false;
+        }
+
+        return true;
     }
 
 
@@ -148,7 +144,6 @@ public class Blockchain {
         //Main method copied over from Main.java
 
 
-
         int prefix = 4;   //we want our hash to start with four zeroes
         String prefixString = new String(new char[prefix]).replace('\0', '0');
 
@@ -165,42 +160,48 @@ public class Blockchain {
         double price = 0.0;
         Transaction data1 = new Transaction(a,time,seller,buyer,price,auctionHouse);
 
+        System.out.println(data1);
+
         //TestData for Data2
         Stakeholder owner2 = new Stakeholder("stakeHolderID", "StakeHolderName","StakeHolderAddress",0.0);
-        Artefact a2 = new Artefact("id","name","address",owner);
+        Artefact a2 = new Artefact("id","name","address",owner2);
         LocalDateTime time2 = LocalDateTime.now();
         Stakeholder seller2 = new Stakeholder("stakeHolderID", "StakeHolderName","StakeHolderAddress",0.0);
         Stakeholder buyer2 = new Stakeholder("stakeHolderID", "StakeHolderName","StakeHolderAddress",0.0);
         Stakeholder auctionHouse2 = new Stakeholder("stakeHolderID", "StakeHolderName","StakeHolderAddress",0.0);
         double price2 = 0.0;
-        Transaction data2 = new Transaction(a,time,seller,buyer,price,auctionHouse);
+        Transaction data2 = new Transaction(a2,time2,seller2,buyer2,price2,auctionHouse2);
 
         //TestData for Data 3
         Stakeholder owner3 = new Stakeholder("stakeHolderID", "StakeHolderName","StakeHolderAddress",0.0);
-        Artefact a3 = new Artefact("id","name","address",owner);
+        Artefact a3 = new Artefact("id","name","address",owner3);
         LocalDateTime time3 = LocalDateTime.now();
         Stakeholder seller3 = new Stakeholder("stakeHolderID", "StakeHolderName","StakeHolderAddress",0.0);
         Stakeholder buyer3 = new Stakeholder("stakeHolderID", "StakeHolderName","StakeHolderAddress",0.0);
         Stakeholder auctionHouse3 = new Stakeholder("stakeHolderID", "StakeHolderName","StakeHolderAddress",0.0);
         double price3 = 0.0;
-        Transaction data3 = new Transaction(a,time,seller,buyer,price,auctionHouse);
+        Transaction data3 = new Transaction(a3,time3,seller3,buyer3,price3,auctionHouse3);
 
 
+
+        Blockchain aa = new Blockchain();
+        aa.verifyBlockchain(7);
 
 
         //What do we pass through as the initial hash for the genisis Block?
         //Should it just be 0 -- started with blockchain.get(blockchain.size() - 1).getCurHash();
         //Make it 0
-        Block genesisBlock = new Block(data1, blockchain.get(blockchain.size() - 1).getCurHash(), new Date().getTime());
+        Block genesisBlock = new Block(data1,"0", new Date().getTime());
         //newBlock.mineBlock(prefix); -- from Alqhatani's code
 
         //Mining the first block and addin it to the chain
         genesisBlock.mineBlock(prefix);
 
-        if (genesisBlock.getCurHash().substring(0, prefix).equals(prefixString) &&  verifyBlockchain(prefix))
+        if (genesisBlock.getCurHash().substring(0, prefix).equals(prefixString) && verifyBlockchain(prefix)){
             blockchain.add(genesisBlock);
+            System.out.println("Genesis Block found and added");}
         else
-            System.out.println("Malicious block, not added to the chain");
+            System.out.println("Malicious block. Genesis block not added to the chain");
 
         //Making the second Block
         Block secondBlock = new Block(data2, blockchain.get(blockchain.size() - 1).getCurHash(),new Date().getTime());
@@ -208,10 +209,12 @@ public class Blockchain {
         //Mining the second block
         secondBlock.mineBlock(prefix);
         //Add the second block to the chain if everything is verified
-        if (secondBlock.getCurHash().substring(0, prefix).equals(prefixString) &&  Blockchain.verifyBlockchain(prefix))
+        if (secondBlock.getCurHash().substring(0, prefix).equals(prefixString) &&  verifyBlockchain(prefix)) {
             blockchain.add(secondBlock);
+            System.out.println("Second block found and added");
+        }
         else
-            System.out.println("Malicious block, not added to the chain");
+            System.out.println("Malicious block. Second block not added to the chain");
 
         //Make the third block
         Block thirdBlock = new Block(data3,blockchain.get(blockchain.size() - 1).getCurHash(), new Date().getTime());
@@ -219,12 +222,15 @@ public class Blockchain {
         thirdBlock.mineBlock(prefix);
 
         //If the third block verifies, add it to the list
-        if (thirdBlock.getCurHash().substring(0, prefix).equals(prefixString) &&  Blockchain.verifyBlockchain(prefix))
+        if (thirdBlock.getCurHash().substring(0, prefix).equals(prefixString) &&  verifyBlockchain(prefix)) {
             blockchain.add(thirdBlock);
+            System.out.println("Third block found and added");
+        }
         else
-            System.out.println("Malicious block, not added to the chain");
+            System.out.println("Malicious block. Third block not added to the chain");
+
+
+    //end of main
     }
-
-
-
+//end of class
 }

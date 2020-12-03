@@ -29,8 +29,10 @@ public class Block {
 
     public Block(Transaction data, String previousHash, long timeStamp){
         this.previousHash=previousHash;
-        this.curHash= calculateBlockHash();// initial hash no zeros
-        this.data=new Transaction(data);
+        //this.curHash= calculateBlockHash();// initial hash no zeros
+
+        //somehow Data is throwing a null pointer exception and not accessing the transaction.
+        this.data = new Transaction(data);
         this.timeStamp=timeStamp;
         this.nonce = RandomNumberGen();
 
@@ -85,18 +87,20 @@ public class Block {
 
     //calculate blockhash with No Nonce provided
     public String calculateBlockHash() {
+        String dataString = this.data.toString();
+
         String dataToHash = previousHash
                 + Long.toString(timeStamp)
                 + Integer.toString(nonce)
-                + data.toString();
+                + dataString;
 
         MessageDigest digest = null;
         byte[] bytes = null;
         try {
             digest = MessageDigest.getInstance("SHA-256");
             bytes = digest.digest(dataToHash.getBytes(UTF_8));
-            throw new UnsupportedEncodingException("ciao"); //TODO: give real error message later
-        } catch (NoSuchAlgorithmException | UnsupportedEncodingException ex) {
+           // throw new UnsupportedEncodingException("ciao"); //TODO: give real error message later
+        } catch (NoSuchAlgorithmException ex) {
             System.out.println("The encoding is not supported");
         }
 
@@ -109,6 +113,8 @@ public class Block {
 
     //calculate blockhash but the nonce has been provided
     public String calculateBlockHash(int nonce) {
+
+
         String dataToHash = previousHash
                 + Long.toString(timeStamp)
                 + Integer.toString(nonce)
@@ -175,22 +181,29 @@ public class Block {
 // mine method that find an hash starting with the prefix required
     public String mine(int prefix){
         int sizeOfPrefix = (""+prefix).length();
-        String counterHash = "";
+        String counterHash = calculateBlockHash();
+       /**
         if(this.curHash!=null){//try and catch
             counterHash = this.curHash;
         }
         else{
             System.out.println("There was an error with the minBlock() method");
         }
+        **/
 
-        SecureRandom secureRandom = new SecureRandom();
-        int randomNumForNonce = secureRandom.nextInt();
-        this.nonce = randomNumForNonce;
+//        SecureRandom secureRandom = new SecureRandom();
+//        int randomNumForNonce = secureRandom.nextInt();
+//        this.nonce = randomNumForNonce;
 // TODO: check if currhash starts with 5 0s
-        while(counterHash.substring(0,sizeOfPrefix).equals(Integer.toString(prefix))==false){
+
+        String prefixString = new String(new char[prefix]).replace('\0', '0');
+
+        while(!counterHash.substring(0,prefix).equals(prefixString)){
             counterHash = this.calculateBlockHash();//add nonce
             this.nonce++;
+            //System.out.println(counterHash);
         }
+        System.out.println("CounterHash from mine: "+counterHash);
         return counterHash;
     }
 
@@ -207,7 +220,7 @@ public class Block {
 
         Blockchain blockchainInstance= new Blockchain();
         //checks for 2 transactions for the artefact *after 2001* and if the buyer can afford the artefact by going to the method twotransactionsperartefact located in the blockchain class
-        if(blockchainInstance.twoTransactionsPerArtefact(t.getArtefact())==true && t.getBuyer().getBalance()>=priceVal){
+        if (t.getBuyer().getBalance()>=priceVal){
             t.getAuctionHouse().setBalance(auctionHouseCurBal + .1*(priceVal));//10% given to auctionhouse
             t.getArtefact().getCurrent_owner().setBalance(artefactCountryCurBal + .2*(priceVal));//20% given to country of origin
             t.getSeller().setBalance(artefactSellerCurBal + .7*(priceVal));//70% given to seller
