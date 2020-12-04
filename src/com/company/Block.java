@@ -182,14 +182,14 @@ public class Block {
     public String mine(int prefix){
         int sizeOfPrefix = (""+prefix).length();
         String counterHash = calculateBlockHash();
-       /**
+       /*
         if(this.curHash!=null){//try and catch
             counterHash = this.curHash;
         }
         else{
             System.out.println("There was an error with the minBlock() method");
         }
-        **/
+        */
 
 //        SecureRandom secureRandom = new SecureRandom();
 //        int randomNumForNonce = secureRandom.nextInt();
@@ -199,8 +199,8 @@ public class Block {
         String prefixString = new String(new char[prefix]).replace('\0', '0');
 
         while(!counterHash.substring(0,prefix).equals(prefixString)){
+            this.nonce=this.nonce+1;
             counterHash = this.calculateBlockHash();//add nonce
-            this.nonce++;
             //System.out.println(counterHash);
         }
         System.out.println("CounterHash from mine: "+counterHash);

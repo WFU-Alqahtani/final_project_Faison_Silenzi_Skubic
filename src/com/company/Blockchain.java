@@ -82,47 +82,50 @@ public class Blockchain {
 
     // Figure out what the issue is with Static references; when we make this static, we can't reference anything with "this"
     //verify every block in the blockchain
-    public static boolean verifyBlockchain(int prefix){
-        int sizeOfPrefix = (""+prefix).length();
+    public static boolean verifyBlockchain(int prefix) {
+        String prefixString = new String(new char[prefix]).replace('\0', '0');
 
         //Blockchain method Size() needs to be made to return int that shows the size of the BC
         //getCurHash is preformed on a Block datatype and returns the current hash of a block
-
         if (blockchain.size() == 0) {
             //just add the first block bc it's the genesis block
             return true;
         }
 
-            //TODO: Make a for loop starting at 1 and wrap the if statement in it.
+        //TODO: Make a for loop starting at 1 and wrap the if statement in it.
 
-            //TODO: Modify this so that it calls the blockchain class itself rather than an ArrayList (BC) that doesn't exist
+        //TODO: Modify this so that it calls the blockchain class itself rather than an ArrayList (BC) that doesn't exist
 
-            //going inside the class, inside the blockchain arrayList, to the last Block in the arraylist, to get the current hash
-            //then comparing it (ignoring case) by using the mine method (which doesn't actually mine but calculates the hash).
+        //going inside the class, inside the blockchain arrayList, to the last Block in the arraylist, to get the current hash
+        //then comparing it (ignoring case) by using the mine method (which doesn't actually mine but calculates the hash).
 
-            //separate this out into 3 if statements; if any of them break, return false;
-        System.out.println("CurHash: "+blockchain.get(blockchain.size()-1).getCurHash());
-        System.out.println("Calculate1: "+blockchain.get(blockchain.size()-1).calculateBlockHash());
-        System.out.println("Calculate2: "+blockchain.get(blockchain.size()-1).calculateBlockHash());
-        System.out.println(blockchain.get(blockchain.size()-1).getNonce());
+        //separate this out into 3 if statements; if any of them break, return false;
+        for (int i = 1; i < blockchain.size(); i++) {
 
-        if (!blockchain.get(blockchain.size()-1).getCurHash().equalsIgnoreCase(blockchain.get(blockchain.size()-1).calculateBlockHash())) {
-            System.out.println("Stored current != calculated current hash");
-            return false;
-        }
-        if (!blockchain.get(blockchain.size()-2).getCurHash().equalsIgnoreCase(blockchain.get(blockchain.size()-1).getPreviousHash())) {
+            if (!blockchain.get(i).getCurHash().equals(blockchain.get(i).calculateBlockHash())) {
+                System.out.println("Stored current != calculated current hash");
+                System.out.println(blockchain.get(i).getCurHash());
+                System.out.println(blockchain.get(i).calculateBlockHash());
+
+
+                return false;
+            }
+        if (!blockchain.get(i-1).getCurHash().equalsIgnoreCase(blockchain.get(i).getPreviousHash())) {
             System.out.println("previous hash != calculated previous hash");
             return false;
+            }
+
+
+            if (!blockchain.get(i).getCurHash().substring(0, prefix).equals(prefixString)) {
+                System.out.println("Block has not been mined yet. Third ifStmt");
+                return false;
+            }
+            return true;
 
         }
-        if (!blockchain.get(blockchain.size()-1).getCurHash().substring(0,sizeOfPrefix).equals(Integer.toString(prefix))){
-            System.out.println("Block has not been mined yet. Third ifStmt");
-            return false;
-        }
-
         return true;
-    }
 
+    }
 
 
 
@@ -208,13 +211,18 @@ public class Blockchain {
 
         //Mining the second block
         secondBlock.mineBlock(prefix);
+        System.out.println("this is the nonce of the second block:="+secondBlock.getNonce());
         //Add the second block to the chain if everything is verified
         if (secondBlock.getCurHash().substring(0, prefix).equals(prefixString) &&  verifyBlockchain(prefix)) {
             blockchain.add(secondBlock);
             System.out.println("Second block found and added");
         }
-        else
+        else {
             System.out.println("Malicious block. Second block not added to the chain");
+            System.out.println("first condition: "+secondBlock.getCurHash().substring(0, prefix).equals(prefixString));
+            System.out.println("second condition: "+verifyBlockchain(prefix));
+        }
+
 
         //Make the third block
         Block thirdBlock = new Block(data3,blockchain.get(blockchain.size() - 1).getCurHash(), new Date().getTime());
