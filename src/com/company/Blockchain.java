@@ -15,7 +15,7 @@ import java.util.Scanner;
 //important for integrity to keep Blockchain object as immutable via 'final' and make it abstract
 public class Blockchain {
 
-    public static ArrayList<Block> blockchain = new ArrayList<Block>();
+    private static ArrayList<Block> blockchain = new ArrayList<>();
     public static ArrayList<Block> getChain(){
         return blockchain;
     }
@@ -26,15 +26,10 @@ public class Blockchain {
     //Returns an arraylist that does something??
     //what this method does is to retrieve all the transactions in the blockchain for the artefact identified by its ID
     public ArrayList<Block> retrieveProvenance(String id){
-        ArrayList<Block> searchResults= new ArrayList<Block>();
-        for (int i=0; i<this.blockchain.size();i++){
-
-            //TODO id is a string so it should .equalsto and not ==
-            if (id.equalsIgnoreCase(blockchain.get(i).getData().getArtefact().getId())){
-                searchResults.add(blockchain.get(i));
-            }
-            else{continue;
-            }
+        ArrayList<Block> searchResults= new ArrayList<>();
+        for ( Block block : blockchain ) {
+            if (id.equalsIgnoreCase(block.getData().getArtefact().getId())) searchResults.add(block);
+            else continue;
         }
         //return an arraylist with all the transactions of one specific artefact
         return searchResults;
@@ -55,7 +50,7 @@ public class Blockchain {
     }
 //check all the difference conditions for treatySC so it uses different methods, shown before that allow to check for different conditions
     public boolean twoTransactionsPerArtefact(Artefact a){
-        ArrayList<Block> results=new ArrayList<Block>();
+        ArrayList<Block> results= new ArrayList<>();
         for (int i=0; i< retrieveProvenance(a.getId()).size();i++){
             results.add(i,retrieveProvenance(a.getId()).get(i));
         }
@@ -146,7 +141,7 @@ public class Blockchain {
 
     public static void main(String[] args) {
         //Main method copied over from Main.java
-ArrayList<Transaction> dataList = new ArrayList<Transaction>();
+ArrayList<Transaction> dataList = new ArrayList<>();
 
 Scanner scnr = new Scanner(System.in); //Scanner for reading user input
         int prefix = 4;   //we want our hash to start with four zeroes
