@@ -10,6 +10,7 @@ import java.util.ArrayList;
 //for unit testing
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.Scanner;
 
 //important for integrity to keep Blockchain object as immutable via 'final' and make it abstract
 public class Blockchain {
@@ -145,97 +146,137 @@ public class Blockchain {
 
     public static void main(String[] args) {
         //Main method copied over from Main.java
+ArrayList<Transaction> dataList = new ArrayList<Transaction>();
 
-
+Scanner scnr = new Scanner(System.in); //Scanner for reading user input
         int prefix = 4;   //we want our hash to start with four zeroes
         String prefixString = new String(new char[prefix]).replace('\0', '0');
 
         //data1-data3 should be filled by the user with Datatype Transaction
         //    public Transaction(Artefact artefact, LocalDateTime timestamp, Stakeholder seller,Stakeholder buyer, Double price, Stakeholder auctionHouse){
 
-        //TestData for Data1
-        Stakeholder owner = new Stakeholder("stakeHolderID", "StakeHolderName","StakeHolderAddress",0.0);
-        Artefact a = new Artefact("id","name","address",owner);
+//reading user input for first 3 blocks
+    for(int i=1; i<4; i++) {
+        System.out.println("Enter Stakeholder ID: ");
+            String stakeHolderID= scnr.nextLine();
+        System.out.println("Enter Stakeholder Name: ");
+        String stakeHolderName=scnr.nextLine();
+        System.out.println("Enter Stakeholder Address: ");
+        String stakeHolderAddress = scnr.nextLine();
+        System.out.println("Enter Stakeholder Bank Balance (include cents): ");
+        double balance;
+        balance = scnr.nextDouble();
+        scnr.nextLine();    //this resets the scanner cursor to the next line, scnr was skipping lines w/o this, do not delete!!
+
+    //adding user input to Stakeholder class
+        Stakeholder owner = new Stakeholder(stakeHolderID, stakeHolderName, stakeHolderAddress, balance);
+        Stakeholder seller = new Stakeholder(stakeHolderID, stakeHolderName, stakeHolderAddress, balance);
+        Stakeholder buyer = new Stakeholder(stakeHolderID, stakeHolderName, stakeHolderAddress, balance);
+        Stakeholder auctionHouse = new Stakeholder(stakeHolderID, stakeHolderName, stakeHolderAddress, balance);
+
+        System.out.println("Enter Artefact ID: ");
+        String aID = scnr.nextLine();
+        System.out.println("Enter Artefact Name: ");
+        String aName= scnr.nextLine();
+        System.out.println("Enter Artefact Country of Origin: ");
+        String aOrigin = scnr.nextLine();
+        System.out.println("Enter Artefact Price (include cents): ");
+        Double price = scnr.nextDouble();
+        scnr.nextLine();        //this resets the scanner cursor to the next line, scnr was skipping lines w/o this, do not delete!!
+
+    //adding all input info to classes and data to the ArrayList of data
+        Artefact a = new Artefact(aID, aName, aOrigin, owner);
         LocalDateTime time = LocalDateTime.now();
-        Stakeholder seller = new Stakeholder("stakeHolderID", "StakeHolderName","StakeHolderAddress",0.0);
-        Stakeholder buyer = new Stakeholder("stakeHolderID", "StakeHolderName","StakeHolderAddress",0.0);
-        Stakeholder auctionHouse = new Stakeholder("stakeHolderID", "StakeHolderName","StakeHolderAddress",0.0);
-        double price = 0.0;
-        Transaction data1 = new Transaction(a,time,seller,buyer,price,auctionHouse);
+        Transaction data = new Transaction(a, time, seller, buyer, price, auctionHouse);
+        dataList.add(data);
 
-        System.out.println(data1);
+   //confirmation dialogue that data was successfully added
+        if(i==1)
+            System.out.println("\n"+i +" Transaction Added to System.\n");
+        else
+            System.out.println("\n"+i+" Transactions Added to System.\n");
+    }
 
-        //TestData for Data2
-        Stakeholder owner2 = new Stakeholder("stakeHolderID", "StakeHolderName","StakeHolderAddress",0.0);
-        Artefact a2 = new Artefact("id","name","address",owner2);
-        LocalDateTime time2 = LocalDateTime.now();
-        Stakeholder seller2 = new Stakeholder("stakeHolderID", "StakeHolderName","StakeHolderAddress",0.0);
-        Stakeholder buyer2 = new Stakeholder("stakeHolderID", "StakeHolderName","StakeHolderAddress",0.0);
-        Stakeholder auctionHouse2 = new Stakeholder("stakeHolderID", "StakeHolderName","StakeHolderAddress",0.0);
-        double price2 = 0.0;
-        Transaction data2 = new Transaction(a2,time2,seller2,buyer2,price2,auctionHouse2);
-
-        //TestData for Data 3
-        Stakeholder owner3 = new Stakeholder("stakeHolderID", "StakeHolderName","StakeHolderAddress",0.0);
-        Artefact a3 = new Artefact("id","name","address",owner3);
-        LocalDateTime time3 = LocalDateTime.now();
-        Stakeholder seller3 = new Stakeholder("stakeHolderID", "StakeHolderName","StakeHolderAddress",0.0);
-        Stakeholder buyer3 = new Stakeholder("stakeHolderID", "StakeHolderName","StakeHolderAddress",0.0);
-        Stakeholder auctionHouse3 = new Stakeholder("stakeHolderID", "StakeHolderName","StakeHolderAddress",0.0);
-        double price3 = 0.0;
-        Transaction data3 = new Transaction(a3,time3,seller3,buyer3,price3,auctionHouse3);
-
-
-
-        Blockchain aa = new Blockchain();
-        aa.verifyBlockchain(7);
+//        //TestData for Data2
+//        Stakeholder owner2 = new Stakeholder("stakeHolderID", "StakeHolderName","StakeHolderAddress",0.0);
+//        Artefact a2 = new Artefact("id","name","address",owner2);
+//        LocalDateTime time2 = LocalDateTime.now();
+//        Stakeholder seller2 = new Stakeholder("stakeHolderID", "StakeHolderName","StakeHolderAddress",0.0);
+//        Stakeholder buyer2 = new Stakeholder("stakeHolderID", "StakeHolderName","StakeHolderAddress",0.0);
+//        Stakeholder auctionHouse2 = new Stakeholder("stakeHolderID", "StakeHolderName","StakeHolderAddress",0.0);
+//        double price2 = 0.0;
+//        Transaction data2 = new Transaction(a2,time2,seller2,buyer2,price2,auctionHouse2);
+//
+//        //TestData for Data 3
+//        Stakeholder owner3 = new Stakeholder("stakeHolderID", "StakeHolderName","StakeHolderAddress",0.0);
+//        Artefact a3 = new Artefact("id","name","address",owner3);
+//        LocalDateTime time3 = LocalDateTime.now();
+//        Stakeholder seller3 = new Stakeholder("stakeHolderID", "StakeHolderName","StakeHolderAddress",0.0);
+//        Stakeholder buyer3 = new Stakeholder("stakeHolderID", "StakeHolderName","StakeHolderAddress",0.0);
+//        Stakeholder auctionHouse3 = new Stakeholder("stakeHolderID", "StakeHolderName","StakeHolderAddress",0.0);
+//        double price3 = 0.0;
+//        Transaction data3 = new Transaction(a3,time3,seller3,buyer3,price3,auctionHouse3);
 
 
-        //What do we pass through as the initial hash for the genisis Block?
-        //Should it just be 0 -- started with blockchain.get(blockchain.size() - 1).getCurHash();
-        //Make it 0
-        Block genesisBlock = new Block(data1,"0", new Date().getTime());
-        //newBlock.mineBlock(prefix); -- from Alqhatani's code
+//genesisBlock needed separate code since it doesn't have a previous hash and I didn't wanna nest an if statement in the for loop below
+        Block genesisBlock = new Block(dataList.get(0), "0", new Date().getTime());
 
-        //Mining the first block and addin it to the chain
+        //Mining the first block and adding it to the chain
         genesisBlock.mineBlock(prefix);
 
-        if (genesisBlock.getCurHash().substring(0, prefix).equals(prefixString) && verifyBlockchain(prefix)){
+        if (genesisBlock.getCurHash().substring(0, prefix).equals(prefixString) && verifyBlockchain(prefix)) {
             blockchain.add(genesisBlock);
-            System.out.println("Genesis Block found and added");}
-        else
-            System.out.println("Malicious block. Genesis block not added to the chain");
+            System.out.println("Block found and added");
+        } else
+            System.out.println("Malicious block. Block not added to the chain");
 
-        //Making the second Block
-        Block secondBlock = new Block(data2, blockchain.get(blockchain.size() - 1).getCurHash(),new Date().getTime());
+//looping twice through the to verify the blocks, accesses the ArrayList<Transaction> to get the data for each stakeholder
+    for (int i=1;i<3;i++) {
+            Block block = new Block(dataList.get(i),blockchain.get(blockchain.size() - 1).getCurHash(), new Date().getTime());
+            //newBlock.mineBlock(prefix); -- from Alqhatani's code
 
-        //Mining the second block
-        secondBlock.mineBlock(prefix);
-        System.out.println("this is the nonce of the second block:="+secondBlock.getNonce());
-        //Add the second block to the chain if everything is verified
-        if (secondBlock.getCurHash().substring(0, prefix).equals(prefixString) &&  verifyBlockchain(prefix)) {
-            blockchain.add(secondBlock);
-            System.out.println("Second block found and added");
-        }
-        else {
-            System.out.println("Malicious block. Second block not added to the chain");
-            System.out.println("first condition: "+secondBlock.getCurHash().substring(0, prefix).equals(prefixString));
-            System.out.println("second condition: "+verifyBlockchain(prefix));
+            //Mining block and adding it to the chain
+            block.mineBlock(prefix);
+
+            if (block.getCurHash().substring(0, prefix).equals(prefixString) && verifyBlockchain(prefix)) {
+                blockchain.add(block);      //all blocks will be under the same variable name, maybe good for security?? may also be annoying for us idk
+                System.out.println("Block found and added");
+            } else
+                System.out.println("Malicious block. Block not added to the chain");
         }
 
+//FIXME throws NullPointerException when stakeholder < artefact price
 
-        //Make the third block
-        Block thirdBlock = new Block(data3,blockchain.get(blockchain.size() - 1).getCurHash(), new Date().getTime());
-        //Mine the thirdBlock
-        thirdBlock.mineBlock(prefix);
-
-        //If the third block verifies, add it to the list
-        if (thirdBlock.getCurHash().substring(0, prefix).equals(prefixString) &&  verifyBlockchain(prefix)) {
-            blockchain.add(thirdBlock);
-            System.out.println("Third block found and added");
-        }
-        else
-            System.out.println("Malicious block. Third block not added to the chain");
+//        //Making the second Block
+//        Block secondBlock = new Block(data2, blockchain.get(blockchain.size() - 1).getCurHash(),new Date().getTime());
+//
+//        //Mining the second block
+//        secondBlock.mineBlock(prefix);
+//        System.out.println("this is the nonce of the second block:="+secondBlock.getNonce());
+//        //Add the second block to the chain if everything is verified
+//        if (secondBlock.getCurHash().substring(0, prefix).equals(prefixString) &&  verifyBlockchain(prefix)) {
+//            blockchain.add(secondBlock);
+//            System.out.println("Second block found and added");
+//        }
+//        else {
+//            System.out.println("Malicious block. Second block not added to the chain");
+//            System.out.println("first condition: "+secondBlock.getCurHash().substring(0, prefix).equals(prefixString));
+//            System.out.println("second condition: "+verifyBlockchain(prefix));
+//        }
+//
+//
+//        //Make the third block
+//        Block thirdBlock = new Block(data3,blockchain.get(blockchain.size() - 1).getCurHash(), new Date().getTime());
+//        //Mine the thirdBlock
+//        thirdBlock.mineBlock(prefix);
+//
+//        //If the third block verifies, add it to the list
+//        if (thirdBlock.getCurHash().substring(0, prefix).equals(prefixString) &&  verifyBlockchain(prefix)) {
+//            blockchain.add(thirdBlock);
+//            System.out.println("Third block found and added");
+//        }
+//        else
+//            System.out.println("Malicious block. Third block not added to the chain");
 
 
     //end of main
