@@ -99,9 +99,8 @@ public class Block {
         try {
             digest = MessageDigest.getInstance("SHA-256");
             bytes = digest.digest(dataToHash.getBytes(UTF_8));
-           // throw new UnsupportedEncodingException("ciao"); //TODO: give real error message later
         } catch (NoSuchAlgorithmException ex) {
-            System.out.println("The encoding is not supported");
+            System.out.println("UTF_8 is not supported");
         }
 
         StringBuffer buffer = new StringBuffer();
@@ -125,9 +124,8 @@ public class Block {
         try {
             digest = MessageDigest.getInstance("SHA-256");
             bytes = digest.digest(dataToHash.getBytes(UTF_8));
-            throw new UnsupportedEncodingException("ciao"); //give real error message later
-        } catch (NoSuchAlgorithmException | UnsupportedEncodingException ex) {
-            System.out.println("The encoding is not supported");
+        } catch (NoSuchAlgorithmException ex) {
+            System.out.println("UTF_8 is not supported");
         }
 
         StringBuffer buffer = new StringBuffer();
@@ -165,11 +163,11 @@ public class Block {
     //this method mines the block
     public void mineBlock(int prefix){
         // if method treaty SC returns true then do mine method and set the current hash the value of the mine method.
-        if(treatySC(this.data)==true){
+        if(treatySC(this.data)){
             this.setCurHash(mine(prefix));
         }
         else{
-            System.out.println("The transaction did not meet the stakeholders' agreement.");
+            System.out.println("\nA Transaction Did Not Meet The Stakeholder's Agreement And Was Therefore Removed From The System.\n");
         }
     }
 // it just allows to create random numbers
@@ -194,7 +192,7 @@ public class Block {
 //        SecureRandom secureRandom = new SecureRandom();
 //        int randomNumForNonce = secureRandom.nextInt();
 //        this.nonce = randomNumForNonce;
-// TODO: check if currhash starts with 5 0s
+
 
         String prefixString = new String(new char[prefix]).replace('\0', '0');
 
@@ -218,12 +216,13 @@ public class Block {
         double artefactCountryCurBal = t.getArtefact().getCurrent_owner().getBalance();//getOwner instead of getCountry since country is type String not Stakeholder and has no balance
         double artefactSellerCurBal = t.getSeller().getBalance();
 
-        Blockchain blockchainInstance= new Blockchain();
+        Blockchain blockchainInstance= new Blockchain(); //why this
+
         //checks for 2 transactions for the artefact *after 2001* and if the buyer can afford the artefact by going to the method twotransactionsperartefact located in the blockchain class
         if (t.getBuyer().getBalance()>=priceVal){
-            t.getAuctionHouse().setBalance(auctionHouseCurBal + .1*(priceVal));//10% given to auctionhouse
-            t.getArtefact().getCurrent_owner().setBalance(artefactCountryCurBal + .2*(priceVal));//20% given to country of origin
-            t.getSeller().setBalance(artefactSellerCurBal + .7*(priceVal));//70% given to seller
+                t.getAuctionHouse().setBalance(auctionHouseCurBal +( .1 * (priceVal)));//10% given to auction house
+                t.getArtefact().getCurrent_owner().setBalance(artefactCountryCurBal +( .2 * (priceVal)));//20% given to country of origin
+                t.getSeller().setBalance(artefactSellerCurBal +( .7 * (priceVal)));//70% given to seller
             return true;
         }
         return false;
