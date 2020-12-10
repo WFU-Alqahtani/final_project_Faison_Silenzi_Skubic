@@ -219,7 +219,7 @@ int i = 1;
         if (!answer.equalsIgnoreCase("y")) stillInput = false; //break if user wants to stop entering data
     }
 
-//looping twice through the to verify the blocks, accesses the ArrayList<Transaction> to get the data for each stakeholder
+//looping through user input arraylist to verify data and create blocks
                 for ( i = 0; i < dataList.size(); i++ ) {
                     if (i == 0) {
                         Block genesisBlock = new Block(dataList.get(0), "0", new Date().getTime());
