@@ -9,7 +9,7 @@ import java.util.Random;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 
-public class Block {
+public class Block extends Blockchain {
     private String previousHash;
     private String curHash;
     private Transaction data;
@@ -22,10 +22,7 @@ public class Block {
         data=new Transaction();
         timeStamp= 0;
         nonce=0;
-
     }
-    // transaction, current hash, timestamp)
-
 
     public Block(Transaction data, String previousHash, long timeStamp){
         this.previousHash=previousHash;
@@ -35,8 +32,8 @@ public class Block {
         this.data = new Transaction(data);
         this.timeStamp=timeStamp;
         this.nonce = RandomNumberGen();
-
     }
+
     public Block(Block blo){
         this.previousHash=blo.getPreviousHash();
         this.nonce=blo.getNonce();
@@ -110,10 +107,9 @@ public class Block {
         return buffer.toString();
     }
 
-    //calculate blockhash but the nonce has been provided
+//calculate blockhash but the nonce has been provided
     public String calculateBlockHash(int nonce) {
-
-
+        
         String dataToHash = previousHash
                 + Long.toString(timeStamp)
                 + Integer.toString(nonce)
@@ -134,35 +130,10 @@ public class Block {
         }
         return buffer.toString();
     }
-
-//    public String mineBlock(int prefix) {
-//        //  if (Treaties(t).fornow()){}
-//        String counterHash=null;
-//        if (treatySC(this.data)==true) {
-//            if (this.curHash != null) {
-//                counterHash = this.getCurHash();
-//            } else {
-//                System.out.println("the hash was null");
-//            }
-//            SecureRandom secureRandom = new SecureRandom();
-//            int randomnumberfornonce = secureRandom.nextInt();
-//            while (!counterHash.substring(0, 5).equalsIgnoreCase(Integer.toString(prefix))) {
-//                counterHash = calculateBlockHash(randomnumberfornonce);
-//                randomnumberfornonce++;
-//            }
-//            this.setCurHash(counterHash); //check this one
-//            return counterHash;
-//        }
-//        else{
-//            System.out.println( "empty hash wrong something");
-//
-//        }
-//    }
-
-
-    //this method mines the block
+    
+//this method mines the block
     public void mineBlock(int prefix){
-        // if method treaty SC returns true then do mine method and set the current hash the value of the mine method.
+    // if method treaty SC returns true then do mine method and set the current hash the value of the mine method.
         if(treatySC(this.data)){
             this.setCurHash(mine(prefix));
         }
@@ -170,7 +141,7 @@ public class Block {
             System.out.println("\nA Transaction Did Not Meet The Stakeholder's Agreement And Was Therefore Removed From The System.\n");
         }
     }
-// it just allows to create random numbers
+
     public int RandomNumberGen(){
         SecureRandom rand = new SecureRandom();
         return rand.nextInt();
@@ -180,61 +151,34 @@ public class Block {
     public String mine(int prefix){
         int sizeOfPrefix = (""+prefix).length();
         String counterHash = calculateBlockHash();
-       /*
-        if(this.curHash!=null){//try and catch
-            counterHash = this.curHash;
-        }
-        else{
-            System.out.println("There was an error with the minBlock() method");
-        }
-        */
-
-//        SecureRandom secureRandom = new SecureRandom();
-//        int randomNumForNonce = secureRandom.nextInt();
-//        this.nonce = randomNumForNonce;
-
 
         String prefixString = new String(new char[prefix]).replace('\0', '0');
 
         while(!counterHash.substring(0,prefix).equals(prefixString)){
             this.nonce=this.nonce+1;
             counterHash = this.calculateBlockHash();//add nonce
-            //System.out.println(counterHash);
-        }
+            }
         System.out.println("CounterHash from mine: "+counterHash);
         return counterHash;
     }
 
-
-
 //this method implement the agreement between the stakeholders
     public boolean treatySC(Transaction t){
-        double priceVal = t.getPrice();//sold price of artefact
-
-        //use these values to increase code readability
+       
+        double priceVal = t.getPrice();//sold price of Artifact
         double auctionHouseCurBal = t.getAuctionHouse().getBalance();
-        double artefactCountryCurBal = t.getArtefact().getCurrent_owner().getBalance();//getOwner instead of getCountry since country is type String not Stakeholder and has no balance
-        double artefactSellerCurBal = t.getSeller().getBalance();
-
-        Blockchain blockchainInstance= new Blockchain(); //why this
-
-        //checks for 2 transactions for the artefact *after 2001* and if the buyer can afford the artefact by going to the method twotransactionsperartefact located in the blockchain class
+        double ArtifactCountryCurBal = t.getArtifact().getCurrent_owner().getBalance();//getOwner instead of getCountry since country is type String not Stakeholder and has no balance
+        double ArtifactSellerCurBal = t.getSeller().getBalance();
+        
         if (t.getBuyer().getBalance()>=priceVal){
                 t.getAuctionHouse().setBalance(auctionHouseCurBal +( .1 * (priceVal)));//10% given to auction house
-                t.getArtefact().getCurrent_owner().setBalance(artefactCountryCurBal +( .2 * (priceVal)));//20% given to country of origin
-                t.getSeller().setBalance(artefactSellerCurBal +( .7 * (priceVal)));//70% given to seller
+                t.getArtifact().getCurrent_owner().setBalance(ArtifactCountryCurBal +( .2 * (priceVal)));//20% given to country of origin
+                t.getSeller().setBalance(ArtifactSellerCurBal +( .7 * (priceVal)));//70% given to seller
             return true;
         }
         return false;
     }
-
-
-
-
-
-
-
-
+    
 }
 
 

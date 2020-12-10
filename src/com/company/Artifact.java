@@ -1,31 +1,31 @@
 package com.company;
 
-public class Artefact {
+public class Artifact {
     private String Id;
     private String Name;
     private String Country_of_Origin;
     private Stakeholder Current_owner;
 
-    public Artefact(){
+    public Artifact(){
         Id=null;
         Name=null;
         Country_of_Origin=null;
         Current_owner=new Stakeholder();
     }
-    public Artefact( String Id, String Name, String Country_of_Origin, Stakeholder Current_owner){
+    public Artifact( String Id, String Name, String Country_of_Origin, Stakeholder Current_owner){
         this.Id=Id;
         this.Name=Name;
         this.Country_of_Origin=Country_of_Origin;
         this.Current_owner= new Stakeholder(Current_owner);
     }
-    public Artefact(Artefact object){
+    public Artifact(Artifact object){
         this.Id=object.getId();
         this.Name=object.getName();
         this.Country_of_Origin=object.getCountry_of_Origin();
         this.Current_owner=new Stakeholder(object.Current_owner);
     }
 
-//setters and getters for the class Artefact
+//setters and getters for the class Artifact
     public void setId(String id) {
         Id = id;
     }

@@ -2,22 +2,22 @@ package com.company;
 
 import java.time.LocalDateTime;
 
-public class Transaction {private Artefact artefact;
+public class Transaction {private Artifact Artifact;
     private LocalDateTime timestamp;
     private Stakeholder seller;
     private Stakeholder buyer;
     private Double price;
     private Stakeholder auctionHouse;
     public Transaction(){
-        artefact=new Artefact();
+        Artifact=new Artifact();
         timestamp=null;
         seller=new Stakeholder();
         buyer =new Stakeholder();
         price=0.0;
         auctionHouse=new Stakeholder();
     }
-    public Transaction(Artefact artefact, LocalDateTime timestamp, Stakeholder seller,Stakeholder buyer, Double price, Stakeholder auctionHouse){
-        this.artefact=new Artefact(artefact);
+    public Transaction(Artifact Artifact, LocalDateTime timestamp, Stakeholder seller,Stakeholder buyer, Double price, Stakeholder auctionHouse){
+        this.Artifact=new Artifact(Artifact);
         this.timestamp= timestamp;
         this.seller= new Stakeholder(seller);
         this.buyer=new Stakeholder(buyer);
@@ -25,7 +25,7 @@ public class Transaction {private Artefact artefact;
         this.auctionHouse=new Stakeholder(auctionHouse);
     }
     public Transaction(Transaction tra){
-        this.artefact=new Artefact(tra.getArtefact());
+        this.Artifact=new Artifact(tra.getArtifact());
         this.price=tra.getPrice();
         this.buyer=new Stakeholder(tra.getBuyer());
         this.seller=new Stakeholder(tra.getSeller());
@@ -42,12 +42,12 @@ public class Transaction {private Artefact artefact;
         this.auctionHouse = auctionHouse;
     }
 
-    public Artefact getArtefact() {
-        return artefact;
+    public Artifact getArtifact() {
+        return Artifact;
     }
 
-    public void setArtefact(Artefact artefact) {
-        this.artefact = artefact;
+    public void setArtifact(Artifact Artifact) {
+        this.Artifact = Artifact;
     }
 
     public LocalDateTime getTimestamp() {
@@ -84,6 +84,6 @@ public class Transaction {private Artefact artefact;
 
     @Override
     public String toString() {
-        return "Artefact: " + artefact.toString() + " time stamp: " + timestamp.toString() + " seller: " + seller.toString() + "buyer: " + buyer.toString() + " auctionhouse: " + auctionHouse.toString() + " price: " + price;
+        return "Artifact: " + Artifact.toString() + " time stamp: " + timestamp.toString() + " seller: " + seller.toString() + "buyer: " + buyer.toString() + " auctionhouse: " + auctionHouse.toString() + " price: " + price;
     }
     }
