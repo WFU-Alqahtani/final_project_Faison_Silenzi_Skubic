@@ -1,9 +1,13 @@
 package com.company;
-
+//Project requirement 1.
 public class Stakeholder {
+    //-	Id to identify each stakeholder
     private String Id;
+    //-	Name of the stakeholder
     private String Name;
+    //-	Address of the stakeholder
     private String Address;
+    //-	Balance to keep track of the stakeholder’s balance
     private Double Balance;
 
     public Stakeholder(){
@@ -57,6 +61,7 @@ public class Stakeholder {
     public void setId(String id) {
         Id = id;
     }
+    //ToString method
     @Override
     public String toString(){
         return"Id= "+ getId()+" Name= "+ getName()+" Address= "+ getAddress()+ " Balance= "+ getBalance();

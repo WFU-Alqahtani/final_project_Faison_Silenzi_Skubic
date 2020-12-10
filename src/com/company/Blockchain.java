@@ -39,7 +39,7 @@ public class Blockchain{
         }
         return searchResults;
     }
-    
+    //check with professor because in class she told us that we do not need to implement this
     public boolean twoTransactionsPerArtifact(Artifact a){
         ArrayList<Block> results= new ArrayList<>();
         for (int i=0; i< retrieveProvenance(a.getId()).size();i++){
@@ -56,26 +56,30 @@ public class Blockchain{
     }
 
 
-    // Figure out what the issue is with Static references; when we make this static, we can't reference anything with "this"
     //verify every block in the blockchain
+    //it validates that a blockchain is valid
     public static boolean verifyBlockchain(int prefix) {
+        //used the same algorythm as before to play with the prefix
         String prefixString = new String(new char[prefix]).replace('\0', '0');
+       //if the blockchain is composed of 0 blocks (it is for the first block)
         if (blockchain.size() == 0) {
             return true;
         }
+        //into the four loop in a way that checks for all the previous blocks
         for (int i = 1; i < blockchain.size(); i++) {
+            //-	Verify that the stored hash of the current block is actually what it calculates
             if (!blockchain.get(i).getCurHash().equals(blockchain.get(i).calculateBlockHash(blockchain.get(i).getNonce()))) {
                 System.out.println("Stored Current Hash != Calculated current hash");
                 System.out.println(blockchain.get(i).getCurHash());
                 System.out.println(blockchain.get(i).calculateBlockHash());
                 return false;
                 }
-
+            //-	Verify that the hash of the previous block stored in the current block is the hash of the previous block
             if (!blockchain.get(i-1).getCurHash().equalsIgnoreCase(blockchain.get(i).getPreviousHash())) {
             System.out.println("Previous Hash != Calculated Previous Hash");
             return false;
                 }
-
+           // -	Verify that the current block has been mined
             if (!blockchain.get(i).getCurHash().substring(0, prefix).equals(prefixString)) {
                 System.out.println("Block has not been mined yet.");
                 return false;
@@ -87,7 +91,7 @@ public class Blockchain{
 
 
     public static void main(String[] args) {
-        //Main method copied over from Main.java
+        //it creates an arraylist called datalist
 ArrayList<Transaction> dataList = new ArrayList<>();
 
         Scanner scnr = new Scanner(System.in); //Scanner for reading user input
@@ -96,7 +100,7 @@ ArrayList<Transaction> dataList = new ArrayList<>();
 
 boolean stillInput = true;
 int i = 1;
-
+    //it is going to ask all the info to the user
     while(stillInput) {
         System.out.println("\nEnter Stakeholder ID: ");
         String stakeHolderID = scnr.nextLine();

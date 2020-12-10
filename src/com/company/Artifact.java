@@ -1,11 +1,15 @@
 package com.company;
 
 public class Artifact {
+    //-	Id to identify each artefact
     private String Id;
+    //-	Name of the artefact
     private String Name;
+    //-	Country of origin of this artefact
     private String Country_of_Origin;
+    //-	Current owner of type Stakeholder
     private Stakeholder Current_owner;
-
+// constructors
     public Artifact(){
         Id=null;
         Name=null;

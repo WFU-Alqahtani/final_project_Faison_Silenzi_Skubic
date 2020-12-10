@@ -10,10 +10,15 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 
 public class Block extends Blockchain {
+    //-	Hash of the previous block, an important part to build the blockchain
     private String previousHash;
+    //-	The hash of this block, calculated based on other data
     private String curHash;
+    //-	The actual data, any information having value, like a banking, real estate transaction. In this project, we will keep track of the provenance of artefacts so data should be of type Transaction.
     private Transaction data;
+    //-	The timestamp of the creation of this block
     private long timeStamp;
+    //-	A nonce, which is an arbitrary (i.e. random) number used in cryptography
     private int nonce;
 
     public Block(){
@@ -23,14 +28,12 @@ public class Block extends Blockchain {
         timeStamp= 0;
         nonce=0;
     }
-
+//this is the only constructor called so focus on this one
     public Block(Transaction data, String previousHash, long timeStamp){
         this.previousHash=previousHash;
-        //this.curHash= calculateBlockHash();// initial hash no zeros
-
-        //somehow Data is throwing a null pointer exception and not accessing the transaction.
         this.data = new Transaction(data);
         this.timeStamp=timeStamp;
+        //allow for random number to be calculated
         this.nonce = RandomNumberGen();
     }
 
@@ -108,6 +111,11 @@ public class Block extends Blockchain {
     }
 
 //calculate blockhash but the nonce has been provided
+    //the code below does the following:
+    //-	We concatenate different parts of the block to generate a hash from
+    //-	We get an instance of the SHA-256 hash function from MessageDigest
+    //-	We generate the hash value of our input data, which is a byte array
+    //-	We transform the byte array into a hexadecimal string, a hash is typically represented as a 32-digit hex number
     public String calculateBlockHash(int nonce) {
         
         String dataToHash = previousHash
@@ -132,9 +140,11 @@ public class Block extends Blockchain {
     }
     
 //this method mines the block
+    //it accepts the defined prefix that we desire to find
     public void mineBlock(int prefix){
     // if method treaty SC returns true then do mine method and set the current hash the value of the mine method.
         if(treatySC(this.data)){
+            //call the method mine and set current hash to the one with the prefix desired
             this.setCurHash(mine(prefix));
         }
         else{
@@ -150,15 +160,19 @@ public class Block extends Blockchain {
 // mine method that find an hash starting with the prefix required
     public String mine(int prefix){
         int sizeOfPrefix = (""+prefix).length();
+        //we call here the method calculateBlockHash
         String counterHash = calculateBlockHash();
-
+        //it sets the prefix
         String prefixString = new String(new char[prefix]).replace('\0', '0');
-
+        //-	Check whether you've found the solution
+        //-	If not, increment the nonce and calculate the hash in a loop
+        //-	The loop goes on until you hit the jackpot-	The loop goes on until you hit the jackpot
         while(!counterHash.substring(0,prefix).equals(prefixString)){
             this.nonce=this.nonce+1;
             counterHash = this.calculateBlockHash();//add nonce
             }
         System.out.println("CounterHash from mine: "+counterHash);
+        //it returns the counter hash
         return counterHash;
     }
 
@@ -169,7 +183,10 @@ public class Block extends Blockchain {
         double auctionHouseCurBal = t.getAuctionHouse().getBalance();
         double ArtifactCountryCurBal = t.getArtifact().getCurrent_owner().getBalance();//getOwner instead of getCountry since country is type String not Stakeholder and has no balance
         double ArtifactSellerCurBal = t.getSeller().getBalance();
-        
+        //	10% are given to the auction house
+        //	20% are given to the country of origin of the sold artefact
+        //	70% are given to the seller
+        //if statement if buyer can afford it
         if (t.getBuyer().getBalance()>=priceVal){
                 t.getAuctionHouse().setBalance(auctionHouseCurBal +( .1 * (priceVal)));//10% given to auction house
                 t.getArtifact().getCurrent_owner().setBalance(ArtifactCountryCurBal +( .2 * (priceVal)));//20% given to country of origin

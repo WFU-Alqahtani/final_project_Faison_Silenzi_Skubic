@@ -2,12 +2,21 @@ package com.company;
 
 import java.time.LocalDateTime;
 
-public class Transaction {private Artifact Artifact;
+public class Transaction {
+    //-	Artefact of type Artefact class
+    private Artifact Artifact;
+    //-	Timestamp of the transaction on the artefact identified with id including the date and time (hint: use LocalDateTime datatype)
     private LocalDateTime timestamp;
+    //-	Seller; the seller in this current transaction of type Stakeholder
     private Stakeholder seller;
+    //-	Buyer; the buyer in this current transaction of type Stakeholder
     private Stakeholder buyer;
+    //-	Price; the price of the artefact in this current transaction
     private Double price;
+    //-	AuctionHouse of type Stakeholder
     private Stakeholder auctionHouse;
+
+    //constructors
     public Transaction(){
         Artifact=new Artifact();
         timestamp=null;
@@ -81,7 +90,7 @@ public class Transaction {private Artifact Artifact;
     public void setPrice(Double price) {
         this.price = price;
     }
-
+//ToString
     @Override
     public String toString() {
         return "Artifact: " + Artifact.toString() + " time stamp: " + timestamp.toString() + " seller: " + seller.toString() + "buyer: " + buyer.toString() + " auctionhouse: " + auctionHouse.toString() + " price: " + price;
